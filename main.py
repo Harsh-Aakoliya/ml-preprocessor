@@ -2,10 +2,14 @@ from datainput import DataInput
 
 class Preprocessor:
 
+    impute = None
+    standardization = None
+    normalization = None
+    categorical = None
     data = 0
 
-    def __init__(self):
-        self.data = DataInput().inputFunction()
+    def __init__(self, filepath):
+        self.data = DataInput().inputFunction(filepath)
 
     def printData(self):
         print(self.data)

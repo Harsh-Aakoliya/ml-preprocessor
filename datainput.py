@@ -3,12 +3,10 @@ import sys
 import pandas as pd
 
 class DataInput:
-
-    def inputFunction(self):
+    def inputFunction(self, filepath):
         #check the extension of the file
         try:
-            file = sys.argv[1]
-            fileExtension = path.splitext(sys.argv[1])
+            filepath = path.splitext(sys.argv[1])
             if fileExtension != '.csv':
                 raise SystemExit("File extension invalid")
         except:
@@ -16,7 +14,7 @@ class DataInput:
 
         #read csv file into data
         try:
-            data = pd.read_csv(file)
+            data = pd.read_csv(filepath)
         except:
             print("Error! The file doesn't exist or it's empty")
 
