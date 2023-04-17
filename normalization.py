@@ -15,9 +15,11 @@ class Normalization:
                 self.data[column] = (self.data[column] - minValue)/(maxValue - minValue)
             except:
                 raise Exception("Invalid!")
+        return self.data
             
     def completeData(self):
         try:
             self.data = pd.DataFrame(MinMaxScaler().fit_transform(self.data))
         except:
             raise Exception("Invalid!")
+        return self.data

@@ -15,9 +15,11 @@ class Standardization:
                 self.data[column] = (self.data[column] - mean)/(standard_deviation)
             except:
                 raise Exception("Invalid....")
+        return self.data
             
     def completeData(self):
         try:
             self.data = pd.DataFrame(StandardScaler().fit_transform(self.data))
         except:
             raise Exception("Invalid!")
+        return self.data

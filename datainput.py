@@ -6,11 +6,11 @@ class DataInput:
     def inputFunction(self, filepath):
         #check the extension of the file
         try:
-            filepath = path.splitext(sys.argv[1])
+            fileExtension = path.splitext(filepath)
             if fileExtension != '.csv':
-                raise SystemExit("File extension invalid")
+                raise Exception("File extension invalid")
         except:
-            print("Error occured while searching for file")
+            raise Exception("Error occured while searching for file")
 
         #read csv file into data
         try:
@@ -21,3 +21,5 @@ class DataInput:
         #lowercase
         for column in data.columns.values:
             data.rename(columns = {column : column.lower()}, inplace = True)
+            
+        return data
