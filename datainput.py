@@ -1,16 +1,15 @@
-from os import path
 import sys
 import pandas as pd
 
 class DataInput:
     def inputFunction(self, filepath):
         #check the extension of the file
-        try:
-            fileExtension = path.splitext(filepath)
-            if fileExtension != '.csv':
-                raise Exception("File extension invalid")
-        except:
-            raise Exception("Error occured while searching for file")
+        # try:
+        #     fileExtension = filepath.split(".")
+        #     if fileExtension != '.csv':
+        #         raise Exception("File extension invalid")
+        # except:
+        #     raise Exception("Error occured while searching for file")
 
         #read csv file into data
         try:

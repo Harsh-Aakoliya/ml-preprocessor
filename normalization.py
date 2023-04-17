@@ -1,5 +1,5 @@
 import pandas as pd
-from datadescription import DataDescription
+# from datadescription import DataDescription
 from sklearn.preprocessing import StandardScaler
 
 class Normalization:

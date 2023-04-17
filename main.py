@@ -30,6 +30,6 @@ class Preprocessor:
 
 
 ps = Preprocessor("file.csv")
-data = ps.impute.fillwithmean("marks")
+data = ps.impute.fillwithmode("marks")
 ps.save(data)
         
