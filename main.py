@@ -3,6 +3,8 @@ from standardization import Standardization
 from normalization import Normalization
 from impute import Impute
 from categorical import Categorical
+from decimalscaling import DecimalScaling
+from compression import Compression
 import pandas as pd
 
 class Preprocessor:
@@ -15,6 +17,9 @@ class Preprocessor:
         self.standardization = Standardization(self.data)
         self.normalization = Normalization(self.data)
         self.categorical = Categorical(self.data)
+        self.decimalscaling = DecimalScaling(self.data)
+        self.compression = Compression(self.data)
+
 
     def printData(self):
         print(self.data)
@@ -30,5 +35,9 @@ class Preprocessor:
 
 
 ps = Preprocessor("file.csv")
-data = ps.impute.fillwithmode("marks")
+#data = ps.standardization.column("age")
+#data = ps.standardization.column("income")
+data = ps.normalization.completeData()
+data = ps.decimalscaling.completeData()
+data = ps.compression.lossy(2)
 ps.save(data)

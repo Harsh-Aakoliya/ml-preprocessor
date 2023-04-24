@@ -1,6 +1,6 @@
 import pandas as pd
 # from datadescription import DataDescription
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 
 class Normalization:
 
