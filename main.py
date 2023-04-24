@@ -25,7 +25,6 @@ class Preprocessor:
             toBeDownloaded[column] = saveData[column]
 
         newFileName = "processed.csv"
-<<<<<<< HEAD
         pd.DataFrame(saveData).to_csv(newFileName, index=False)
 
 
@@ -33,7 +32,3 @@ class Preprocessor:
 ps = Preprocessor("file.csv")
 data = ps.impute.fillwithmode("marks")
 ps.save(data)
-        
-=======
-        pd.DataFrame(saveData).to_csv(newFileName, index=False)
->>>>>>> f455259 (added extra features)
