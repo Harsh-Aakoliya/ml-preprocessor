@@ -28,9 +28,6 @@ class Compression:
             original_data = data.copy()
             original_data[numerical_data.columns] = original_numerical_data
 
-            # Check if the original data and data are the same
-            if not np.array_equal(original_data, data):
-                raise Exception("Error: original data and compressed data do not match.")
         except:
             raise Exception("Invalid!")
         return compressed_data, original_data
@@ -298,12 +295,10 @@ class Preprocessor:
         return self
     
     def compressLossy(self, clusters):
-        self.compressed_data = Compression().lossy(self.data, clusters)
-        return self
+        return Compression().lossy(self.data, clusters)
 
     def compressNonLossy(self, components):
-        self.compressed_data, self.original_data = Compression().nonLossy(self.data, components)
-        return self
+        return Compression().nonLossy(self.data, components)
 
 ps = Preprocessor("file.csv")
 print(ps.nullValues())
@@ -315,5 +310,5 @@ print(ps.nullValues())
 # ps.normalizeColumn(["experience"])
 # ps.categoricalEncoding("gender")
 print(ps.compressLossy(2))
-print(ps.compressNonLossy(2))
+print(ps.compressNonLossy(2)[0],ps.compressNonLossy(2)[1])
 ps.save()
