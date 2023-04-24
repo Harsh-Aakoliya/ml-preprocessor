@@ -1,46 +1,47 @@
-Preprocessor Python Package
+# RhinoRefine - Preprocessor Python Package
 
 The Preprocessor Python package provides a simple and easy-to-use interface for data preprocessing in machine learning projects. It includes various methods for data cleaning, scaling, and encoding.
 
-Installation
+## Installation
 
 You can install the Preprocessor package using pip:
 
-Copy code
-pip install Preprocessor
-Usage
+`pip install rhinorefine`
 
 The Preprocessor class is the main class of this package. You can create an instance of this class by providing the filepath of the CSV file that you want to preprocess.
 
-python
-Copy code
+```
 from Preprocessor import Preprocessor
-
 preprocessor = Preprocessor('path/to/your/csv/file.csv')
-Data Cleaning
-Filling Missing Values
+```
+
 The fillwithmean, fillwithmedian, and fillwithmode methods can be used to fill the missing values in a column with the mean, median, or mode value of that column, respectively. You can pass the column name or a list of column names as an argument.
 
-python
-Copy code
+```
 preprocessor.fillwithmean('column_name')
 preprocessor.fillwithmedian(['column_name_1', 'column_name_2'])
 preprocessor.fillwithmode('column_name')
-Removing Columns
+```
+
+### Removing Columns
 The removeColumn method can be used to remove a column from the dataset. You can pass the column name as an argument.
 
-python
-Copy code
+```
 preprocessor.removeColumn('column_name')
-Checking for Null Values
+```
+
+### Checking for Null Values
 The nullValues method returns a dictionary containing the number of null values in each column.
 
-python
-Copy code
+```
 null_values = preprocessor.nullValues()
 print(null_values)
-Data Scaling
-Standardization
+```
+
+### Data Scaling
+
+#### Standardization
+
 The standardizeColumn and standardizeData methods can be used to standardize the data by subtracting the mean and dividing by the standard deviation. You can pass the column name or a list of column names as an argument.
 
 python
