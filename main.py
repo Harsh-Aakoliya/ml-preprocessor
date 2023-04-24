@@ -13,16 +13,8 @@ class Preprocessor:
 
     def __init__(self, filepath):
         self.data = DataInput().inputFunction(filepath)
-        self.impute = Impute(self.data)
-        self.standardization = Standardization(self.data)
-        self.normalization = Normalization(self.data)
-        self.categorical = Categorical(self.data)
-        self.decimalscaling = DecimalScaling(self.data)
-        self.compression = Compression(self.data)
-
-
-    def printData(self):
-        print(self.data)
+        self.original_data = 0
+        self.compressed_data = 0
 
     def save(self, saveData):
         toBeDownloaded = {}
@@ -32,12 +24,65 @@ class Preprocessor:
         newFileName = "processed.csv"
         pd.DataFrame(saveData).to_csv(newFileName, index=False)
 
+    def fillwithmean(self, columns):
+        self.data = Impute.fillwithmean(self.data, columns)
+        return self
+
+    def fillwithmedian(self, columns):
+        self.data = Impute.fillwithmedian(self.data, columns)
+        return self
+
+    def fillwithmode(self, columns):
+        self.data = Impute.fillwithmode(self.data, columns)
+        return self
+
+    def fillwithmode(self, columns):
+        self.data = Impute.fillwithmode(self.data, columns)
+        return self
+
+    def removeColumn(self, column):
+        self.data = Impute.removecol(self.data, column)
+        return self
+
+    def nullValues(self):
+        return = Impute.nullValues(self.data)
+    
+    def standardizeColumn(self, columns):
+        self.data = Standardization.column(self.data, columns)
+        return self
+
+    def standardizeData(self):
+        self.data = Standardization.completeData(self.data)
+        return self
+
+    def normalizeColumn(self, columns):
+        self.data = Normalization.column(self.data, columns)
+        return self
+
+    def normalizeData(self):
+        self.data = Normalization.completeData(self.data)
+        return self
+    
+    def categoricalEncoding(self, column):
+        self.data = Categorical.hotEncoding(self.data, column)
+        return self
+    
+    def decimalScaleColumn(self, columns):
+        self.data = DecimalScaling.column(self.data, columns)
+        return self
+
+    def decimalScaleData(self):
+        self.data = DecimalScaling.completeData(self.data)
+        return self
+    
+    def compressLossy(self, clusters):
+        self.compressed_data = Compression.lossy(self.data, clusters)
+        return self
+    def compressNonLossy(self, components):
+        self.compressed_data, self.original_data = Compression.lossy(self.data, components)
+        return self
 
 
 ps = Preprocessor("file.csv")
-#data = ps.standardization.column("age")
-#data = ps.standardization.column("income")
-data = ps.normalization.completeData()
-data = ps.decimalscaling.completeData()
-data = ps.compression.lossy(2)
+ps.normalization.completeData()
 ps.save(data)
