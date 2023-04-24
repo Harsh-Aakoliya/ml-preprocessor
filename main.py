@@ -81,8 +81,3 @@ class Preprocessor:
     def compressNonLossy(self, components):
         self.compressed_data, self.original_data = Compression.lossy(self.data, components)
         return self
-
-
-ps = Preprocessor("file.csv")
-ps.normalization.completeData()
-ps.save(data)
