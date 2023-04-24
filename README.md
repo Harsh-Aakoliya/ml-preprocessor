@@ -11,11 +11,11 @@ You can install the Preprocessor package using pip:
 The Preprocessor class is the main class of this package. You can create an instance of this class by providing the filepath of the CSV file that you want to preprocess.
 
 ```
-from Preprocessor import Preprocessor
+from rhinorefine import Preprocessor
 preprocessor = Preprocessor('path/to/your/csv/file.csv')
 ```
 
-The fillwithmean, fillwithmedian, and fillwithmode methods can be used to fill the missing values in a column with the mean, median, or mode value of that column, respectively. You can pass the column name or a list of column names as an argument.
+The fillwithmean, fillwithmedian, and fillwithmode methods can be used to fill the missing values in a column with the mean, median, or mode value of that column, respectively.
 
 ```
 preprocessor.fillwithmean('column_name')
@@ -42,45 +42,53 @@ print(null_values)
 
 #### Standardization
 
-The standardizeColumn and standardizeData methods can be used to standardize the data by subtracting the mean and dividing by the standard deviation. You can pass the column name or a list of column names as an argument.
+The standardizeColumn and standardizeData methods can be used to standardize the data by subtracting the mean and dividing by the standard deviation. You can pass the column name as an argument.
 
-python
-Copy code
+```
 preprocessor.standardizeColumn('column_name')
 preprocessor.standardizeData()
-Normalization
-The normalizeColumn and normalizeData methods can be used to normalize the data by scaling the values between 0 and 1. You can pass the column name or a list of column names as an argument.
+```
 
-python
-Copy code
+#### Normalization
+The normalizeColumn and normalizeData methods can be used to normalize the data by scaling the values between 0 and 1. You can pass the column name as an argument.
+
+```
 preprocessor.normalizeColumn('column_name')
 preprocessor.normalizeData()
-Data Encoding
-Categorical Encoding
+```
+
+### Data Encoding
+
+### Categorical Encoding
 The categoricalEncoding method can be used to perform one-hot encoding on a categorical column. You can pass the column name as an argument.
 
-python
-Copy code
+```
 preprocessor.categoricalEncoding('column_name')
-Data Compression
-Lossy Compression
+```
+
+### Data Compression
+
+#### Lossy Compression
 The compressLossy method can be used to compress the data using the K-Means algorithm. You can pass the number of clusters as an argument.
 
-python
-Copy code
+```
 preprocessor.compressLossy(10)
-Non-Lossy Compression
+```
+
+#### Non-Lossy Compression
 The compressNonLossy method can be used to compress the data using Principal Component Analysis (PCA). You can pass the number of components as an argument.
 
-python
-Copy code
+```
 preprocessor.compressNonLossy(5)
-Saving Processed Data
+```
+
+### Saving Processed Data
 The save method can be used to save the preprocessed data to a CSV file.
 
-python
-Copy code
-preprocessor.save(preprocessed_data)
-Conclusion
+```
+preprocessor.save(preprocesser.data)
+```
+
+## Conclusion
 
 The Preprocessor Python package provides a simple and effective way to preprocess data for machine learning projects. It includes various methods for data cleaning, scaling, encoding, and compression. It can save a lot of time and effort for data scientists and machine learning engineers.
