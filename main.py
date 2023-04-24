@@ -12,14 +12,21 @@ class Compression:
     @staticmethod
     def nonLossy(data, components):
         try:
+            # Select only numerical columns from data
+            numerical_data = data.select_dtypes(include=[np.number])
+
             # Instantiate a PCA object with the desired number of components
             pca = PCA(n_components=components)
 
-            # Fit and transform the data using PCA
-            compressed_data = pca.fit_transform(data)
+            # Fit and transform the numerical data using PCA
+            compressed_data = pca.fit_transform(numerical_data)
 
-            # Inverse transform the compressed data to obtain the original data
-            original_data = pca.inverse_transform(compressed_data)
+            # Inverse transform the compressed data to obtain the original numerical data
+            original_numerical_data = pca.inverse_transform(compressed_data)
+
+            # Replace the numerical columns in the original data with the compressed numerical data
+            original_data = data.copy()
+            original_data[numerical_data.columns] = original_numerical_data
 
             # Check if the original data and data are the same
             if not np.array_equal(original_data, data):
@@ -27,21 +34,29 @@ class Compression:
         except:
             raise Exception("Invalid!")
         return compressed_data, original_data
-    
+
     @staticmethod
     def lossy(data, clusters):
         try:
+            # Select only numerical columns
+            numerical_cols = data.select_dtypes(include=['float64', 'int64']).columns
+            numerical_data = data[numerical_cols]
+
             # Instantiate a KMeans object with the desired number of clusters
             kmeans = KMeans(n_clusters=clusters)
 
-            # Fit the data using KMeans
-            kmeans.fit(data)
+            # Fit the numerical data using KMeans
+            kmeans.fit(numerical_data)
 
-            # Quantize the data by replacing each feature with the nearest cluster center
-            compressed_data = kmeans.cluster_centers_[kmeans.predict(data)]
+            # Quantize the numerical data by replacing each feature with the nearest cluster center
+            compressed_data = kmeans.cluster_centers_[kmeans.predict(numerical_data)]
+
+            # Combine the compressed numerical data with the non-numerical columns
+            compressed_data = pd.concat([data.drop(columns=numerical_cols), pd.DataFrame(compressed_data, columns=numerical_cols)], axis=1)
         except:
             raise Exception("Invalid!")
         return compressed_data
+
 
 class DecimalScaling:
 
@@ -76,36 +91,40 @@ class DecimalScaling:
 class Categorical:
 
   @staticmethod
-  def hotEncoding(data,colname):
-
-    # Perform one-hot encoding on the 'gender' column
+  def hotEncoding(data, colname):
+    # Perform one-hot encoding on the column
     one_hot = pd.get_dummies(data[colname])
 
     # Add the one-hot encoded columns to the original dataframe
     data = pd.concat([data, one_hot], axis=1)
 
-    # Drop the original 'gender' column
+    # Drop the original column
     data.drop(colname, axis=1, inplace=True)
 
-    # Create a OneHotEncoder object
-    encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
+    # Check if the column exists before fitting the encoder
+    if colname in data.columns:
+        # Create a OneHotEncoder object
+        encoder = OneHotEncoder(sparse=False, handle_unknown='ignore')
 
-    # Fit the encoder to the categorical data
-    encoder.fit(data[cat_cols])
+        # Fit the encoder to the categorical data
+        encoder.fit(data[[colname]])
 
-    # Transform the categorical columns into one-hot encoded columns
-    onehot = encoder.transform(data[cat_cols])
+        # Transform the categorical columns into one-hot encoded columns
+        onehot = encoder.transform(data[[colname]])
 
-    # Convert the one-hot encoded data into a pandas DataFrame
-    onehot_data = pd.DataFrame(onehot, columns=encoder.get_feature_names(cat_cols))
+        # Convert the one-hot encoded data into a pandas DataFrame
+        onehot_data = pd.DataFrame(onehot, columns=encoder.get_feature_names([colname]))
 
-    # Concatenate the one-hot encoded data with the original DataFrame
-    data_encoded = pd.concat([data, onehot_data], axis=1)
+        # Concatenate the one-hot encoded data with the original DataFrame
+        data_encoded = pd.concat([data, onehot_data], axis=1)
 
-    # Drop the original categorical columns from the DataFrame
-    data_encoded.drop(cat_cols, axis=1, inplace=True)
+        # Drop the original categorical columns from the DataFrame
+        data_encoded.drop(colname, axis=1, inplace=True)
 
-    return data
+        return data_encoded
+    else:
+        return data
+
 
 class Impute:
 
@@ -167,11 +186,11 @@ class Normalization:
                 raise Exception("Invalid!")
         return data
 
-    @staticmethod  
+    @staticmethod
     def completeData(data):
         try:
-            scaler = MinMaxScaler().fit(data)
-            data = pd.DataFrame(scaler.transform(data), columns=data.columns)
+            scaler = MinMaxScaler().fit(data.select_dtypes(include=[np.number]))
+            data[data.select_dtypes(include=[np.number]).columns] = scaler.transform(data.select_dtypes(include=[np.number]))
         except:
             raise Exception("Invalid!")
         return data
@@ -192,8 +211,9 @@ class Standardization:
             
     @staticmethod
     def completeData(data):
+        numeric_cols = data.select_dtypes(include=np.number).columns.tolist()
         try:
-            data = pd.DataFrame(StandardScaler().fit_transform(data))
+            data[numeric_cols] = pd.DataFrame(StandardScaler().fit_transform(data[numeric_cols]))
         except:
             raise Exception("Invalid!")
         return data
@@ -222,13 +242,13 @@ class Preprocessor:
         self.original_data = 0
         self.compressed_data = 0
 
-    def save(self, saveData):
+    def save(self):
         toBeDownloaded = {}
-        for column in saveData.columns.values:
-            toBeDownloaded[column] = saveData[column]
+        for column in self.data.columns.values:
+            toBeDownloaded[column] = self.data[column]
 
         newFileName = "processed.csv"
-        pd.DataFrame(saveData).to_csv(newFileName, index=False)
+        pd.DataFrame(self.data).to_csv(newFileName, index=False)
 
     def fillwithmean(self, column):
         self.data = Impute().fillwithmean(self.data, column)
@@ -247,7 +267,7 @@ class Preprocessor:
         return self
 
     def nullValues(self):
-        return = Impute().nullValues(self.data)
+        return Impute().nullValues(self.data)
     
     def standardizeColumn(self, columns):
         self.data = Standardization().column(self.data, columns)
@@ -280,6 +300,20 @@ class Preprocessor:
     def compressLossy(self, clusters):
         self.compressed_data = Compression().lossy(self.data, clusters)
         return self
+
     def compressNonLossy(self, components):
-        self.compressed_data, self.original_data = Compression().lossy(self.data, components)
+        self.compressed_data, self.original_data = Compression().nonLossy(self.data, components)
         return self
+
+ps = Preprocessor("file.csv")
+print(ps.nullValues())
+# ps.fillwithmean("salary")
+# ps.fillwithmedian("salary")
+# ps.fillwithmode("salary")
+# ps.removeColumn("city")
+# ps.normalizeData()
+# ps.normalizeColumn(["experience"])
+# ps.categoricalEncoding("gender")
+print(ps.compressLossy(2))
+print(ps.compressNonLossy(2))
+ps.save()

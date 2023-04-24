@@ -50,8 +50,7 @@ preprocessor.standardizeData()
 ```
 
 #### Normalization
-The normalizeColumn and normalizeData methods can be used to normalize the data by scaling the values between 0 and 1. You can pass the column name as an argument.
-
+The normalizeColumn and normalizeData methods can be used to normalize the data by scaling the values between 0 and 1. You can pass the column name or a list of column names as an argument.
 ```
 preprocessor.normalizeColumn('column_name')
 preprocessor.normalizeData()
@@ -60,7 +59,7 @@ preprocessor.normalizeData()
 ### Data Encoding
 
 ### Categorical Encoding
-The categoricalEncoding method can be used to perform one-hot encoding on a categorical column. You can pass the column name as an argument.
+The categoricalEncoding method can be used to perform one-hot encoding on a categorical column. You can pass the column name or a list of column names as an argument.
 
 ```
 preprocessor.categoricalEncoding('column_name')
@@ -86,7 +85,7 @@ preprocessor.compressNonLossy(5)
 The save method can be used to save the preprocessed data to a CSV file.
 
 ```
-preprocessor.save(preprocesser.data)
+preprocessor.save()
 ```
 
 ## Conclusion
