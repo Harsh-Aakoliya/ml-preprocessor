@@ -36,4 +36,5 @@ class Compression:
             compressed_data = kmeans.cluster_centers_[kmeans.predict(data)]
         except:
             raise Exception("Invalid!")
+            
         return compressed_data
