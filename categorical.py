@@ -33,5 +33,4 @@ class Categorical:
 
     # Drop the original categorical columns from the DataFrame
     data_encoded.drop(cat_cols, axis=1, inplace=True)
-
     return data
