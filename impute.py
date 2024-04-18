@@ -46,3 +46,4 @@ class Impute:
         for col in data.columns.values:
             nullValues[col] = sum(pd.isnull(data[col]))
         return nullValues
+        
