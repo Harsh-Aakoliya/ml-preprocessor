@@ -22,3 +22,4 @@ class Normalization:
         except:
             raise Exception("Invalid!")
         return data
+
