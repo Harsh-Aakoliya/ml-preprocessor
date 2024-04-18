@@ -14,3 +14,4 @@ class DataInput:
             data.rename(columns = {column : column.lower()}, inplace = True)
             
         return data
+        
