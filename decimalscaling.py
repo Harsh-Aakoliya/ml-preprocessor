@@ -31,3 +31,4 @@ class DecimalScaling:
         except:
             raise Exception("Invalid!")
         return data
+        
