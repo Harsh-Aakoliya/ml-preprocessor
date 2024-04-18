@@ -21,3 +21,4 @@ class Standardization:
         except:
             raise Exception("Invalid!")
         return data
+        
